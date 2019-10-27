@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:pushhealth/task.dart';
 
 enum Race { Black, White, Hispanic, Asian, Other }
 enum Activity { None, Little, Some, Lots }
@@ -61,7 +62,7 @@ class HealthProvider with ChangeNotifier {
 
   Comm comm;
 
-  List tasks;
+  List<Task> tasks;
 
   Set types;
 
@@ -117,7 +118,7 @@ class HealthProvider with ChangeNotifier {
     }
     if (_likes.contains(Likes.Outdoors)) {
       types.add('park');
-      types.add('physiotherapist');
+      //types.add('physiotherapist');
     }
     if (_likes.contains(Likes.Games)) {
       types.add('bar');

@@ -82,12 +82,18 @@ class _HomeState extends State<Home> {
               ),
             ),
             //Spacer(),
+            Text('Here are some things to do today!'),
             Container(
               child: ListView.builder(
                 shrinkWrap: true,
                 itemCount: provider.tasks?.length ?? 0,
                 itemBuilder: (context, index) {
-                  return ListTile();
+                  return Card(
+                    child: ListTile(
+                      title: Text(provider.tasks[index].name),
+                      subtitle: Text(provider.tasks[index].description),
+                    ),
+                  );
                 },
               ),
             ),
