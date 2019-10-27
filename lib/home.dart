@@ -84,19 +84,27 @@ class _HomeState extends State<Home> {
             //Spacer(),
             Text('Here are some things to do today!'),
             Container(
-              child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: provider.tasks?.length ?? 0,
-                itemBuilder: (context, index) {
-                  return Card(
-                    child: ListTile(
-                      title: Text(provider.tasks[index].name),
-                      subtitle: Text(provider.tasks[index].description),
-                      leading: Image.asset(
-                        'assets/tasks/${provider.tasks[index].type}.png',
-                        height: 100,
-                      ),
-                    ),
+              child: FutureBuilder(
+                initialData: [],
+                future: provider.generateTasks(),
+                builder: (context, snapshot) {
+                  if (snapshot == null) return Container();
+                  print(snapshot);
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: snapshot.data?.length ?? 0,
+                    itemBuilder: (context, index) {
+                      return Card(
+                        child: ListTile(
+                          title: Text(snapshot.data[index].name),
+                          subtitle: Text(snapshot.data[index].description),
+                          leading: Image.asset(
+                            'assets/tasks/${snapshot.data[index].type}.png',
+                            height: 100,
+                          ),
+                        ),
+                      );
+                    },
                   );
                 },
               ),

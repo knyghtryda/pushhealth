@@ -52,6 +52,18 @@ class _OnboardingState extends State<Onboarding> {
                     textCapitalization: TextCapitalization.words,
                   ),
                   PlatformTextField(
+                    android: (_) => MaterialTextFieldData(
+                        decoration: InputDecoration(labelText: 'Zip Code')),
+                    ios: (_) => CupertinoTextFieldData(placeholder: 'Zip Code'),
+                    onChanged: (zip) {
+                      provider.zipCode = int.parse(zip);
+                    },
+                    onSubmitted: (zip) {
+                      provider.zipCode = int.parse(zip);
+                    },
+                    keyboardType: TextInputType.number,
+                  ),
+                  PlatformTextField(
                       maxLength: 3,
                       keyboardType: TextInputType.number,
                       android: (_) => MaterialTextFieldData(
@@ -141,9 +153,12 @@ class _OnboardingState extends State<Onboarding> {
                         children: <Widget>[
                           Icon(
                             likes[like],
-                            size: 30,
+                            size: 60,
                           ),
-                          Text(EnumToString.parse(like))
+                          Text(
+                            EnumToString.parse(like),
+                            style: TextStyle(fontSize: 24),
+                          )
                         ],
                       ),
                     ),
@@ -176,12 +191,18 @@ class _OnboardingState extends State<Onboarding> {
       padding: const EdgeInsets.fromLTRB(0, 12, 0, 0),
       child: IntroductionScreen(
         pages: pages(provider),
-        onDone: () => Navigator.push(
-            context,
-            platformPageRoute(
-                context: context,
-                builder: (_) => ChangeNotifierProvider<HealthProvider>(
-                    builder: (context) => HealthProvider(), child: Home()))),
+        onDone: () async {
+          //provider.getLatLongByZip(provider.zipCode);
+          //provider.generateTasks();
+          return Navigator.push(
+              context,
+              platformPageRoute(
+                  context: context,
+                  builder: (_) {
+                    return ChangeNotifierProvider<HealthProvider>(
+                        builder: (context) => HealthProvider(), child: Home());
+                  }));
+        },
         done: const Text('Done', style: TextStyle(fontWeight: FontWeight.w600)),
         next: const Text('Next', style: TextStyle(fontWeight: FontWeight.w600)),
         showSkipButton: false,

@@ -49,13 +49,7 @@ class HealthProvider with ChangeNotifier {
 
   int age;
   Race race;
-  int _zipCode;
-  get zipCode => zipCode;
-  set zipCode(zipCode) {
-    _zipCode = zipCode;
-    getLatLongByZip(_zipCode);
-    notifyListeners();
-  }
+  int zipCode = 89183;
 
   bool medication;
   Activity activity;
@@ -71,37 +65,43 @@ class HealthProvider with ChangeNotifier {
   removeLike(Likes like) => _likes.remove(like);
   toggleLike(Likes like) {
     _likes?.contains(like) ?? false ? _likes.remove(like) : _likes.add(like);
+    addTypesByLikes();
     notifyListeners();
   }
 
   Comm comm;
 
   List<Task> tasks = [
-    Task(name: 'test task', description: 'test description', type: 'gym')
+    //Task(name: 'test task', description: 'test description', type: 'gym')
   ];
 
-  Set types;
+  Set types = {};
 
   double lat;
   double lng;
 
-  generateTasks() async {
+  Future<List<Task>> generateTasks() async {
     tasks.clear();
     types.forEach((type) async {
-      Map data = await searchNearby(lat, lng, type);
-      var taskData = data['results'][0];
-      tasks.add(Task(
-        name: randomChoice(prompts) + taskData['name'] + ' today?',
-        description: null,
-        type: type,
-      ));
+      await searchNearby(lat, lng, type).then((data) {
+        print(data);
+        print(data['results'][0]);
+        var taskData = data['results'][0];
+        tasks.add(Task(
+          name: randomChoice(prompts) + taskData['name'] + ' today?',
+          description: null,
+          type: type,
+        ));
+        return tasks;
+      });
     });
-    notifyListeners();
+    return [];
   }
 
   Future searchNearby(double lat, double lng, String type) async {
     final String url =
         '$nearbyBaseUrl?key=$apiKey&location=$lat,$lng&radius=10000&type=$type';
+    print(url);
     final response = await http.get(url);
     if (response.statusCode == 200) {
       final Map data = json.decode(response.body);
@@ -114,10 +114,12 @@ class HealthProvider with ChangeNotifier {
   getLatLongByZip(int zip) async {
     final String url =
         '$geocodeBaseUrl?key=$apiKey&components=postal_code:$zip';
+    print(url);
     final response = await http.get(url);
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
-      var location = data['results']['geometry']['location'];
+      print(data);
+      var location = data['results'][0]['geometry']['location'];
       lat = location['lat'];
       lng = location['lng'];
     } else {
