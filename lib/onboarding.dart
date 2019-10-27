@@ -26,7 +26,7 @@ class _OnboardingState extends State<Onboarding> {
         ),
       ),
       title: 'Welcome!',
-      body: 'Welcome to Push Health, your new guide to becoming a better you!',
+      body: 'Say hi to Glu, your new buddy to becoming a better you!',
     ),
     PageViewModel(
       title: 'Personal Information',
@@ -115,29 +115,47 @@ class _OnboardingState extends State<Onboarding> {
                     ))
                 .toList())),
     PageViewModel(
-        title: 'Likes',
-        bodyWidget: GridView.count(
-          crossAxisCount: 2,
-          shrinkWrap: true,
-          padding: EdgeInsets.all(10),
-          children: Likes.values
-              .map((like) => SizedBox(
-                    width: 50,
-                    height: 50,
-                    child: FlatButton(
-                      onPressed: () {},
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          Icon(likes[like]),
-                          Text(EnumToString.parse(like))
-                        ],
-                      ),
+      title: 'Likes',
+      bodyWidget: GridView.count(
+        crossAxisCount: 2,
+        shrinkWrap: true,
+        padding: EdgeInsets.all(10),
+        children: Likes.values
+            .map((like) => SizedBox(
+                  width: 50,
+                  height: 50,
+                  child: FlatButton(
+                    onPressed: () {},
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Icon(
+                          likes[like],
+                          size: 30,
+                        ),
+                        Text(EnumToString.parse(like))
+                      ],
                     ),
-                  ))
-              .toList(),
+                  ),
+                ))
+            .toList(),
+      ),
+    ),
+    PageViewModel(
+        title: 'Communication Preference',
+        bodyWidget: Column(
+          children: <Widget>[
+            Text('How would you like me to communicate with you?'),
+            DropDownField(
+              required: true,
+              labelText: 'Talk to me through...',
+              items:
+                  Comm.values.map((comm) => EnumToString.parse(comm)).toList(),
+              onValueChanged: (item) {},
+            )
+          ],
         )),
   ];
   @override
@@ -149,8 +167,10 @@ class _OnboardingState extends State<Onboarding> {
         pages: pages,
         onDone: () => Navigator.push(context,
             platformPageRoute(context: context, builder: (_) => Home())),
-        done: const Text("Done", style: TextStyle(fontWeight: FontWeight.w600)),
+        done: const Text('Done', style: TextStyle(fontWeight: FontWeight.w600)),
+        next: const Text('Next', style: TextStyle(fontWeight: FontWeight.w600)),
         showSkipButton: false,
+        showNextButton: true,
       ),
     );
   }

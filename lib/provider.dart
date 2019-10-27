@@ -3,7 +3,17 @@ import 'package:flutter/material.dart';
 
 enum Race { Black, White, Hispanic, Asian, Other }
 enum Activity { None, Little, Some, Lots }
-enum Likes { Food, Outdoors, Pets, Games, Socializing, Reading, DateNight }
+enum Likes {
+  Food,
+  Outdoors,
+  Pets,
+  Games,
+  Socializing,
+  Reading,
+  DateNight,
+  Travel
+}
+enum Comm { Text, Email, Push }
 
 Map likes = {
   Likes.Food: Icons.fastfood,
@@ -12,7 +22,8 @@ Map likes = {
   Likes.Games: Icons.games,
   Likes.Socializing: Icons.local_drink,
   Likes.Reading: Icons.book,
-  Likes.DateNight: Icons.favorite
+  Likes.DateNight: Icons.favorite,
+  Likes.Travel: Icons.flight
 };
 
 class HealthProvider with ChangeNotifier {
@@ -26,4 +37,6 @@ class HealthProvider with ChangeNotifier {
   bool medication;
   Activity activity;
   List<Likes> likes;
+
+  Comm comm;
 }
