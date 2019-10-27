@@ -5,8 +5,9 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 import 'package:provider/provider.dart';
-import 'package:pushhealth/main.dart';
 import 'package:pushhealth/provider.dart';
+
+import 'home.dart';
 
 class Onboarding extends StatefulWidget {
   Onboarding({Key key}) : super(key: key);
@@ -146,13 +147,8 @@ class _OnboardingState extends State<Onboarding> {
       padding: const EdgeInsets.fromLTRB(0, 12, 0, 0),
       child: IntroductionScreen(
         pages: pages,
-        onDone: () => Navigator.push(
-            context,
-            platformPageRoute(
-                context: context,
-                builder: (_) => MyHomePage(
-                      title: 'Home Page',
-                    ))),
+        onDone: () => Navigator.push(context,
+            platformPageRoute(context: context, builder: (_) => Home())),
         done: const Text("Done", style: TextStyle(fontWeight: FontWeight.w600)),
         showSkipButton: false,
       ),
