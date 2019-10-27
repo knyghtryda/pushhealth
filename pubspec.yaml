@@ -33,6 +33,7 @@ dependencies:
   intl: ^0.16.0
   flutter_swiper: ^1.1.6
   http: ^0.12.0+2
+  dart_random_choice: ^0.0.2
 
 dev_dependencies:
   flutter_test:

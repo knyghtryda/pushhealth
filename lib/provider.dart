@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:dart_random_choice/dart_random_choice.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -35,6 +36,12 @@ const geocodeBaseUrl = 'https://maps.googleapis.com/maps/api/geocode/json';
 const nearbyBaseUrl =
     'https://maps.googleapis.com/maps/api/place/nearbysearch/json';
 
+const List prompts = [
+  'Why not hit up ',
+  'How bout going to ',
+  'Hey, check out '
+];
+
 class HealthProvider with ChangeNotifier {
   HealthProvider();
   String firstName;
@@ -52,31 +59,52 @@ class HealthProvider with ChangeNotifier {
 
   bool medication;
   Activity activity;
-  List<Likes> _likes;
-  get likes => _likes;
+  Set<Likes> _likes = {};
+  Set<Likes> get likes => _likes;
   set likes(likes) {
     _likes = likes;
     addTypesByLikes();
     notifyListeners();
   }
 
+  addLike(Likes like) => _likes.add(like);
+  removeLike(Likes like) => _likes.remove(like);
+  toggleLike(Likes like) {
+    _likes?.contains(like) ?? false ? _likes.remove(like) : _likes.add(like);
+    notifyListeners();
+  }
+
   Comm comm;
 
-  List<Task> tasks;
+  List<Task> tasks = [
+    Task(name: 'test task', description: 'test description', type: 'gym')
+  ];
 
   Set types;
 
   double lat;
   double lng;
 
-  generateTasks() {}
+  generateTasks() async {
+    tasks.clear();
+    types.forEach((type) async {
+      Map data = await searchNearby(lat, lng, type);
+      var taskData = data['results'][0];
+      tasks.add(Task(
+        name: randomChoice(prompts) + taskData['name'] + ' today?',
+        description: null,
+        type: type,
+      ));
+    });
+    notifyListeners();
+  }
 
   Future searchNearby(double lat, double lng, String type) async {
     final String url =
         '$nearbyBaseUrl?key=$apiKey&location=$lat,$lng&radius=10000&type=$type';
     final response = await http.get(url);
     if (response.statusCode == 200) {
-      final data = json.decode(response.body);
+      final Map data = json.decode(response.body);
       return data;
     } else {
       throw Exception('An error occurred getting nearby places');
@@ -92,9 +120,6 @@ class HealthProvider with ChangeNotifier {
       var location = data['results']['geometry']['location'];
       lat = location['lat'];
       lng = location['lng'];
-      types.forEach((category) async {
-        await searchNearby(lat, lng, category);
-      });
     } else {
       throw Exception('An error occurred getting places by zip');
     }

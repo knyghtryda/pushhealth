@@ -3,5 +3,5 @@ class Task {
   final String type;
   final String description;
 
-  Task(this.name, this.type, this.description);
+  Task({this.name, this.type, this.description});
 }

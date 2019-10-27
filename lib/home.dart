@@ -92,6 +92,10 @@ class _HomeState extends State<Home> {
                     child: ListTile(
                       title: Text(provider.tasks[index].name),
                       subtitle: Text(provider.tasks[index].description),
+                      leading: Image.asset(
+                        'assets/tasks/${provider.tasks[index].type}.png',
+                        height: 100,
+                      ),
                     ),
                   );
                 },
