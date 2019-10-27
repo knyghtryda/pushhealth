@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 enum Race { Black, White, Hispanic, Asian, Other }
 enum Activity { None, Little, Some, Lots }
@@ -15,7 +18,7 @@ enum Likes {
 }
 enum Comm { Text, Email, Push }
 
-Map likes = {
+const Map likes = {
   Likes.Food: Icons.fastfood,
   Likes.Outdoors: Icons.directions_walk,
   Likes.Pets: Icons.pets,
@@ -26,7 +29,10 @@ Map likes = {
   Likes.Travel: Icons.flight
 };
 
-var apiKey = 'AIzaSyA7_-4rJMyPdawqe84JadCampBF8FFrmQ0';
+const apiKey = 'AIzaSyA7_-4rJMyPdawqe84JadCampBF8FFrmQ0';
+const geocodeBaseUrl = 'https://maps.googleapis.com/maps/api/geocode/json';
+const nearbyBaseUrl =
+    'https://maps.googleapis.com/maps/api/place/nearbysearch/json';
 
 class HealthProvider with ChangeNotifier {
   HealthProvider();
@@ -35,7 +41,13 @@ class HealthProvider with ChangeNotifier {
 
   int age;
   Race race;
-  int zipCode;
+  int _zipCode;
+  get zipCode => zipCode;
+  set zipCode(zipCode) {
+    _zipCode = zipCode;
+    getLatLongByZip(_zipCode);
+    notifyListeners();
+  }
 
   bool medication;
   Activity activity;
@@ -43,7 +55,7 @@ class HealthProvider with ChangeNotifier {
   get likes => _likes;
   set likes(likes) {
     _likes = likes;
-    addCategoriesByLikes();
+    addTypesByLikes();
     notifyListeners();
   }
 
@@ -51,17 +63,67 @@ class HealthProvider with ChangeNotifier {
 
   List tasks;
 
-  Set categories;
+  Set types;
+
+  double lat;
+  double lng;
 
   generateTasks() {}
 
-  searchNearby(double lat, double long, String category) async {}
+  Future searchNearby(double lat, double lng, String type) async {
+    final String url =
+        '$nearbyBaseUrl?key=$apiKey&location=$lat,$lng&radius=10000&type=$type';
+    final response = await http.get(url);
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      return data;
+    } else {
+      throw Exception('An error occurred getting nearby places');
+    }
+  }
 
-  addCategoriesByLikes() {
-    categories.clear();
+  getLatLongByZip(int zip) async {
+    final String url =
+        '$geocodeBaseUrl?key=$apiKey&components=postal_code:$zip';
+    final response = await http.get(url);
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      var location = data['results']['geometry']['location'];
+      lat = location['lat'];
+      lng = location['lng'];
+      types.forEach((category) async {
+        await searchNearby(lat, lng, category);
+      });
+    } else {
+      throw Exception('An error occurred getting places by zip');
+    }
+  }
+
+  addTypesByLikes() {
+    types.clear();
     if (_likes.contains(Likes.Food)) {
-      categories.add('cafe');
-      categories.add('gym');
+      types.add('cafe');
+      types.add('gym');
+    }
+    if (_likes.contains(Likes.Socializing)) {
+      types.add('bar');
+      types.add('gym');
+      types.add('park');
+    }
+
+    if (_likes.contains(Likes.Reading)) {
+      types.add('cafe');
+      types.add('library');
+    }
+    if (_likes.contains(Likes.Outdoors)) {
+      types.add('park');
+      types.add('physiotherapist');
+    }
+    if (_likes.contains(Likes.Games)) {
+      types.add('bar');
+    }
+    if (_likes.contains(Likes.Pets)) {
+      types.add('pet_store');
     }
   }
 }
