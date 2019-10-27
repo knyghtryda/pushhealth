@@ -77,7 +77,7 @@ class HealthProvider with ChangeNotifier {
     //Task(name: 'test task', description: 'test description', type: 'gym')
   ];
 
-  Set types = {};
+  Set types = {'park', 'gym', 'cafe'};
 
   double lat;
   double lng;

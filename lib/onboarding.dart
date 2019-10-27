@@ -194,7 +194,8 @@ class _OnboardingState extends State<Onboarding> {
           onDone: () async {
             //provider.getLatLongByZip(provider.zipCode);
             //provider.generateTasks();
-            return Navigator.push(context, MaterialPageRoute(builder: (_) {
+            return Navigator.push(context,
+                MaterialPageRoute(builder: (context) {
               return Home();
             }));
           },
