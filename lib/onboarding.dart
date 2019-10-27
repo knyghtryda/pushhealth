@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 import 'package:pushhealth/main.dart';
 
@@ -13,6 +15,12 @@ class Onboarding extends StatefulWidget {
 class _OnboardingState extends State<Onboarding> {
   final pages = [
     PageViewModel(
+      image: Center(
+        child: SvgPicture.asset(
+          'assets/onboarding/intro.svg',
+          semanticsLabel: 'Intro',
+        ),
+      ),
       title: 'Welcome!',
       body: 'Welcome to Push Health, your new guide to becoming a better you!',
     )
