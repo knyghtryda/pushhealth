@@ -1,6 +1,6 @@
-import 'package:fancy_on_boarding/fancy_on_boarding.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:introduction_screen/introduction_screen.dart';
 import 'package:pushhealth/main.dart';
 
 class Onboarding extends StatefulWidget {
@@ -11,32 +11,25 @@ class Onboarding extends StatefulWidget {
 }
 
 class _OnboardingState extends State<Onboarding> {
-  final pageList = [
-    PageModel(
-      color: Colors.blueGrey,
-      heroAssetPath: null,
-      iconAssetPath: null,
-      title: Text('Welcome!'),
-      body: Text(
-          'Welcome to Push Health, your new guide to becoming a better you!'),
+  final pages = [
+    PageViewModel(
+      title: 'Welcome!',
+      body: 'Welcome to Push Health, your new guide to becoming a better you!',
     )
   ];
   @override
   Widget build(BuildContext context) {
-    return PlatformScaffold(
-      body: FancyOnBoarding(
-        doneButtonText: 'All Done!',
-        showSkipButton: false,
-        pageList: pageList,
-        onDoneButtonPressed: () => Navigator.push(
-            context,
-            platformPageRoute(
+    return IntroductionScreen(
+      pages: pages,
+      onDone: () => Navigator.push(
+          context,
+          platformPageRoute(
               context: context,
               builder: (_) => MyHomePage(
-                title: 'Home Page',
-              ),
-            )),
-      ),
+                    title: 'Home Page',
+                  ))),
+      done: const Text("Done", style: TextStyle(fontWeight: FontWeight.w600)),
+      showSkipButton: false,
     );
   }
 }
