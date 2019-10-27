@@ -1,6 +1,5 @@
 import 'package:dropdownfield/dropdownfield.dart';
 import 'package:enum_to_string/enum_to_string.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_svg/svg.dart';
@@ -72,45 +71,91 @@ class _OnboardingState extends State<Onboarding> {
         bodyWidget: GridView.count(
             shrinkWrap: true,
             crossAxisCount: 2,
+            padding: EdgeInsets.all(10),
             children: Activity.values
-                .map((activity) => SizedBox(
-                      width: 100,
-                      height: 100,
-                      child: RaisedButton(
-                        onPressed: () {},
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  for (var i = 0;
-                                      i < Activity.values.indexOf(activity);
-                                      i++)
-                                    Icon(Icons.directions_run)
-                                ]),
-                            Text(EnumToString.parse(activity))
-                          ],
+                .map((activity) => Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: SizedBox(
+                        width: 50,
+                        height: 50,
+                        child: FlatButton(
+                          onPressed: () {},
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: activity == Activity.None
+                                        ? [
+                                            Icon(Icons
+                                                .airline_seat_recline_normal)
+                                          ]
+                                        : [
+                                            for (var i = 0;
+                                                i <
+                                                    Activity.values
+                                                        .indexOf(activity);
+                                                i++)
+                                              Icon(Icons.directions_run)
+                                          ]),
+                              ),
+                              Text(
+                                EnumToString.parse(activity),
+                                style: TextStyle(
+                                    fontSize: 20, fontWeight: FontWeight.bold),
+                              )
+                            ],
+                          ),
                         ),
                       ),
                     ))
                 .toList())),
-    PageViewModel(title: 'Likes', bodyWidget: Container()),
+    PageViewModel(
+        title: 'Likes',
+        bodyWidget: GridView.count(
+          crossAxisCount: 2,
+          shrinkWrap: true,
+          padding: EdgeInsets.all(10),
+          children: Likes.values
+              .map((like) => SizedBox(
+                    width: 50,
+                    height: 50,
+                    child: FlatButton(
+                      onPressed: () {},
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          Icon(likes[like]),
+                          Text(EnumToString.parse(like))
+                        ],
+                      ),
+                    ),
+                  ))
+              .toList(),
+        )),
   ];
   @override
   Widget build(BuildContext context) {
     var provider = Provider.of<HealthProvider>(context);
-    return IntroductionScreen(
-      pages: pages,
-      onDone: () => Navigator.push(
-          context,
-          platformPageRoute(
-              context: context,
-              builder: (_) => MyHomePage(
-                    title: 'Home Page',
-                  ))),
-      done: const Text("Done", style: TextStyle(fontWeight: FontWeight.w600)),
-      showSkipButton: false,
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(0, 12, 0, 0),
+      child: IntroductionScreen(
+        pages: pages,
+        onDone: () => Navigator.push(
+            context,
+            platformPageRoute(
+                context: context,
+                builder: (_) => MyHomePage(
+                      title: 'Home Page',
+                    ))),
+        done: const Text("Done", style: TextStyle(fontWeight: FontWeight.w600)),
+        showSkipButton: false,
+      ),
     );
   }
 }
