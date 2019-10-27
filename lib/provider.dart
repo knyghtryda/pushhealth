@@ -39,4 +39,8 @@ class HealthProvider with ChangeNotifier {
   List<Likes> likes;
 
   Comm comm;
+
+  List tasks;
+
+  generateTasks() {}
 }
