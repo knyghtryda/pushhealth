@@ -66,6 +66,8 @@ class HealthProvider with ChangeNotifier {
   toggleLike(Likes like) {
     _likes?.contains(like) ?? false ? _likes.remove(like) : _likes.add(like);
     addTypesByLikes();
+    print(types);
+    print(likes);
     notifyListeners();
   }
 
@@ -82,6 +84,8 @@ class HealthProvider with ChangeNotifier {
 
   Future<List<Task>> generateTasks() async {
     tasks.clear();
+    print(types);
+    print(_likes);
     types.forEach((type) async {
       await searchNearby(lat, lng, type).then((data) {
         print(data);

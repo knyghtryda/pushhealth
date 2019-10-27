@@ -5,9 +5,8 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 import 'package:provider/provider.dart';
+import 'package:pushhealth/home.dart';
 import 'package:pushhealth/provider.dart';
-
-import 'home.dart';
 
 class Onboarding extends StatefulWidget {
   Onboarding({Key key}) : super(key: key);
@@ -187,26 +186,25 @@ class _OnboardingState extends State<Onboarding> {
   @override
   Widget build(BuildContext context) {
     var provider = Provider.of<HealthProvider>(context);
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(0, 12, 0, 0),
-      child: IntroductionScreen(
-        pages: pages(provider),
-        onDone: () async {
-          //provider.getLatLongByZip(provider.zipCode);
-          //provider.generateTasks();
-          return Navigator.push(
-              context,
-              platformPageRoute(
-                  context: context,
-                  builder: (_) {
-                    return ChangeNotifierProvider<HealthProvider>(
-                        builder: (context) => HealthProvider(), child: Home());
-                  }));
-        },
-        done: const Text('Done', style: TextStyle(fontWeight: FontWeight.w600)),
-        next: const Text('Next', style: TextStyle(fontWeight: FontWeight.w600)),
-        showSkipButton: false,
-        showNextButton: true,
+    return PlatformScaffold(
+      body: Padding(
+        padding: const EdgeInsets.fromLTRB(0, 12, 0, 0),
+        child: IntroductionScreen(
+          pages: pages(provider),
+          onDone: () async {
+            //provider.getLatLongByZip(provider.zipCode);
+            //provider.generateTasks();
+            return Navigator.push(context, MaterialPageRoute(builder: (_) {
+              return Home();
+            }));
+          },
+          done:
+              const Text('Done', style: TextStyle(fontWeight: FontWeight.w600)),
+          next:
+              const Text('Next', style: TextStyle(fontWeight: FontWeight.w600)),
+          showSkipButton: false,
+          showNextButton: true,
+        ),
       ),
     );
   }
