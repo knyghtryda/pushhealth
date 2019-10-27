@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: ChangeNotifierProvider<HealthProvider>(
-        builder: (_) => HealthProvider(),
+        builder: (context) => HealthProvider(),
         child: Onboarding(),
       ),
     );

@@ -165,8 +165,12 @@ class _OnboardingState extends State<Onboarding> {
       padding: const EdgeInsets.fromLTRB(0, 12, 0, 0),
       child: IntroductionScreen(
         pages: pages,
-        onDone: () => Navigator.push(context,
-            platformPageRoute(context: context, builder: (_) => Home())),
+        onDone: () => Navigator.push(
+            context,
+            platformPageRoute(
+                context: context,
+                builder: (_) => ChangeNotifierProvider<HealthProvider>(
+                    builder: (context) => HealthProvider(), child: Home()))),
         done: const Text('Done', style: TextStyle(fontWeight: FontWeight.w600)),
         next: const Text('Next', style: TextStyle(fontWeight: FontWeight.w600)),
         showSkipButton: false,

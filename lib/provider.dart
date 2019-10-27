@@ -26,7 +26,10 @@ Map likes = {
   Likes.Travel: Icons.flight
 };
 
+var apiKey = 'AIzaSyA7_-4rJMyPdawqe84JadCampBF8FFrmQ0';
+
 class HealthProvider with ChangeNotifier {
+  HealthProvider();
   String firstName;
   String lastName;
 
@@ -36,11 +39,29 @@ class HealthProvider with ChangeNotifier {
 
   bool medication;
   Activity activity;
-  List<Likes> likes;
+  List<Likes> _likes;
+  get likes => _likes;
+  set likes(likes) {
+    _likes = likes;
+    addCategoriesByLikes();
+    notifyListeners();
+  }
 
   Comm comm;
 
   List tasks;
 
+  Set categories;
+
   generateTasks() {}
+
+  searchNearby(double lat, double long, String category) async {}
+
+  addCategoriesByLikes() {
+    categories.clear();
+    if (_likes.contains(Likes.Food)) {
+      categories.add('cafe');
+      categories.add('gym');
+    }
+  }
 }
